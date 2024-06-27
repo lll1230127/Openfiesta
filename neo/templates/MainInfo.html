@@ -175,7 +175,24 @@
         .stylish-button:hover {
             transform: scale(1.05); /* 鼠标悬停时放大 */
         }
+        
+        .image-container {
+            /* 设定div容器的宽度和高度 */
+            width: 100%; /* 或具体数值，如 300px */
+            height: 75%; /* 或具体数值，根据需要调整 */
+            position: relative; /* 用于绝对定位图片 */
+            overflow: hidden; /* 隐藏超出容器部分 */
+        }
 
+        .image-container img {
+            /* 使图片适应div容器 */
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 或 contain, fill, scale-down 根据需求选择 */
+            position: absolute; /* 绝对定位，充满容器 */
+            top: 0;
+            left: 0;
+        }
     </style>
 </head>
 
@@ -216,7 +233,10 @@
                                             </div>
                                             <div class="layui-tab-item ">
                                                 <br>
-                                                <img id="draft2" src="../static/images/ironman.jpg" class="captchaImage">
+                                                <div class="image-container">
+                                                    <img id="draft2" src="../static/images/ironman3.jpg" class="captchaImage">
+                                                </div>
+                                                
                                                 <br>
                                                 <a href="./Painting2.html" class="button-link">
                                                     <button class = "stylish-button" type="button" style="margin: 0 auto;">

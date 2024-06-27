@@ -34,13 +34,13 @@ def system(request):
 
 
 def Painting(request):
-    return render(request,'Painting.html')
+    return render(request,'DrawingBoard.html')
 
 def Painting2(request):
-    return render(request,'Painting2.html')
+    return render(request,'DrawingBoard2.html')
 
 def Painting3(request):
-    return render(request,'DrawingBoard.html')
+    return render(request,'DrawingBoard3.html')
 
 def MainInfo(request):
 

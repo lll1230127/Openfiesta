@@ -27,7 +27,7 @@
             height: 40px;
             line-height: 40px;
             font-size: 15px;
-            color: gold;
+            color: rgb(0, 0, 0);
             background: rgba(0,0,0,0.2);
             border-radius: 10px;
             border: none;
@@ -49,7 +49,7 @@
             height: 5px;
         }
         label{
-            color: gold;
+            color: rgb(0, 0, 0);
         }
         label span{
             color: #48c0a4;
@@ -146,7 +146,7 @@
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background-color:gold;
+            background-color:rgb(0, 0, 0);
 		}
         #eraserSizeLine{
             margin: 0;
@@ -155,10 +155,10 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background-color:gold;
+            background-color:rgb(0, 0, 0);
         }
         .stylish-button {
-            background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            background-image: linear-gradient(to right, #6ec7ed 0%, #d2e8b0 100%);
             border: none;
             color: white;
             text-align: center;
@@ -167,7 +167,6 @@
             cursor: pointer;
             height: 40px;
             width: 200px;
-            border-radius: 30px; /* 圆角 */
             box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19); /* 阴影效果 */
             transition: all 0.3s ease; /* 平滑过渡 */
             display: flex;
@@ -178,6 +177,64 @@
         .stylish-button:hover {
             transform: scale(1.05); /* 鼠标悬停时放大 */
         }
+       
+    /* 自定义模态框样式 */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        padding-top: 50px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+        margin: auto;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.9);
+        width: 50%;
+        background-color: #fff;
+        animation-name: animatetop;
+        animation-duration: 0.4s;
+    }
+    @keyframes animatetop {
+        from {top: -300px; opacity: 0;}
+        to {top: 0; opacity: 1;}
+    }
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    .modal-header h2 {
+        margin: 0;
+        padding: 0;
+        font-weight: bold;
+    }
+    .modal-body p {
+        font-size: 16px;
+        margin-bottom: 1rem;
+    }
+    .modal-footer button {
+        margin-right: 10px;
+    }
+    #content {
+            background-image: url('../static/images/ironman.jpg');
+            background-position: center;
+            background-repeat: no-repeat;
+    }
     </style>
 </head>
 <body>
@@ -209,6 +266,8 @@
             <div>
                 <input class="range1" type="range" id="brushSize" min="1" max="50" value="10"
                        onchange="updateValue('brushSize')" oninput="updateLine('brushSize', 'brushSizeLine')">
+                       
+                <br>
                 <div style="width: 80px;height: 50px">
                     <div id="brushSizeLine"></div>
                 </div>
@@ -218,9 +277,11 @@
             <div>
                 <label for="eraserSize">橡皮 <span id="eraserSizeValue">20</span></label>
             </div>
+
             <div>
                 <input  class="range1" type="range" id="eraserSize" min="1" max="80" value="20"
                         onchange="updateValue('eraserSize')" oninput="updateLine('eraserSize', 'eraserSizeLine')">
+                <br>
                 <div style="width: 80px;height: 80px">
                     <div id="eraserSizeLine"></div>
                 </div>
@@ -229,23 +290,59 @@
 
     </div>
     <div style="color: #48c0a4;">
-        <span>橡皮：ctrl+右键</span>&nbsp;&nbsp;
-        <span>撤销：ctrl+z</span>&nbsp;&nbsp;
-        <span>恢复：ctrl+y</span>&nbsp;&nbsp;
-        <span>保存：ctrl+s</span>&nbsp;&nbsp;
-        <a href="./Painting3.html" class="button-link">
+        <span>Eraser: Ctrl+Right-click</span>&nbsp;&nbsp;
+        <span>Undo: Ctrl+Z</span>&nbsp;&nbsp;
+        <span>Recovery: ctrl+y</span>&nbsp;&nbsp;
+        <span>Save: Ctrl+S</span>&nbsp;&nbsp;
+        <a href="./MainInfo.html" class="button-link">
             <button class = "stylish-button" type="button" style="float:right;">
-                Start Painting Now
+                I have finished!
             </button>
         </a>
+        <button id="evaluateBtn1"  class = "stylish-button" type="button" style="float:right;">
+            Know how great your drawings are!
+        </button>
+        <button id="evaluateBtn2" class = "stylish-button" type="button" style="float:right;">
+            Call AI to help you!
+        </button>
     </div>
 
-    <div style="margin: 20px auto;width: 1450px;">
+    <div id="myModal1" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>AI image generate results</h2>
+            <span class="close">&times;</span>
+          </div>
+          <div class="modal-body">
+            <img id="generatedImage" src="#" alt="AI生成的图片" class="img-fluid mb-3">
+          </div>
+          <div class="modal-footer">
+            <button id="replaceImageButton1" class="btn btn-success">Replace</button>
+            <button id="cancelButton1" class="btn btn-secondary">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="myModal2" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>AI image evaluation results</h2>
+            <span class="close">&times;</span>
+          </div>
+          <div class="modal-body">
+            <p id="aiEvaluation">EProbot: This is a very interesting picture!</p>
+          </div>
+          <div class="modal-footer">
+            <button id="replaceImageButton2" class="btn btn-success">Agree</button>
+            <button id="cancelButton2" class="btn btn-secondary">Disagree</button>
+          </div>
+        </div>
+      </div>
+
+    <div id="content" style="margin: 20px auto;width: 1450px;">
         <canvas id="canvas" width="1250" height="650"></canvas>
     </div>
     
-
-
     <!-- 引入动态创建消息弹框的js -->
     <script type="text/javascript" src="../static/js/msgBox.js"></script>
 
@@ -295,6 +392,7 @@
         // 鼠标抬起
         canvas.onpointerup = function (e) {
             isMouseDown = false;
+            dragging = false;
             if(brush != 8){ // 排除文本模式
                 points = [];
                 isDrawing = false;
@@ -583,31 +681,49 @@
         });
     </script>
     <script>
-        var canvas = document.getElementById('canvas');
-        var ctx = canvas.getContext('2d');
-        var imageUrl = '../static/images/ironman.jpg'; // 替换为你的图片路径
-    
-        var img = new Image();
-        img.onload = function() {
-            // 计算图片的宽高比
-            var imageRatio = img.width / img.height;
-    
-            // 确定画布的展示方式，这里以保持宽度不变为例
-            var canvasWidth = canvas.width;
-            var canvasHeight = canvasWidth / imageRatio; // 根据图片宽高比计算高度
-    
-            // 如果新的canvasHeight大于原始高度，需要调整canvas尺寸
-            if (canvasHeight > canvas.height) {
-                canvasHeight = canvas.height - 40;
-                canvasWidth = canvasHeight * imageRatio;
-            }
-    
-            // 绘制图片到canvas中央
-            var x = (canvas.width - canvasWidth) / 2 -20;
-            var y = (canvas.height - canvasHeight) / 2;
-            ctx.drawImage(img, x, y, canvasWidth, canvasHeight);
-        };
-        img.src = imageUrl;
+        document.getElementById("evaluateBtn1").addEventListener("click", function() {
+            document.getElementById("myModal1").style.display = "block";
+            // 这里应调用AI API来获取评价和生成图片
+            // 假设我们已经有了评价和图片URL
+            document.getElementById("generatedImage").src = "../static/images/ironman2.png";
+           
+        });
+
+        document.getElementById("evaluateBtn2").addEventListener("click", function() {
+            document.getElementById("myModal2").style.display = "block";
+            // 这里应调用AI API来获取评价和生成图片
+            // 假设我们已经有了评价和图片URL
+            document.getElementById("aiEvaluation").innerText = "EProbot: This picture is colorful and uniquely composed!";
+        });
+        
+        document.getElementsByClassName("close")[0].addEventListener("click", function() {
+            document.getElementById("myModal1").style.display = "none";
+        });
+
+        document.getElementsByClassName("close")[1].addEventListener("click", function() {
+            document.getElementById("myModal2").style.display = "none";
+        });
+
+        
+        document.getElementById("cancelButton1").addEventListener("click", function() {
+            alert("Feedback received, thank you, and be happy!"); // 实际应用中，这里应该替换页面上的图片元素
+            document.getElementById("myModal1").style.display = "none";
+        });
+        
+        document.getElementById("cancelButton2").addEventListener("click", function() {
+            document.getElementById("myModal2").style.display = "none";
+        });
+
+        document.getElementById("replaceImageButton1").addEventListener("click", function() {
+            alert("Feedback received, thank you, and be happy!"); // 实际应用中，这里应该替换页面上的图片元素
+            document.getElementById("myModal1").style.display = "none";
+        });
+        
+        // 实现“替代现有图片”的逻辑需根据你的具体应用场景来编写
+        document.getElementById("replaceImageButton2").addEventListener("click", function() {
+            alert("The picture has been replaced!"); // 实际应用中，这里应该替换页面上的图片元素
+            document.getElementById("myModal2").style.display = "none";
+        });
     </script>
 </body>
 </html>
