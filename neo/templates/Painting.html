@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			canvas {
+				
+				position: absolute;
+				right: 0;
+				top: 50px;
+				
+			}
+
+			div {
+				width: 130px;
+				background-color:white;
+				box-sizing: border-box;
+				border-right: 1px solid black;
+				display: flex;
+				flex-direction: column;
+			}
+
+			body {
+				user-select: none;
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+				box-sizing: border-box;
+				overflow: hidden;
+			}
+			box>*{
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+			nav{
+				background-color: aliceblue;
+				width: 100%;
+				height: 50px;
+				font-size: 2em;
+				text-align: center;
+				padding: 5px;
+				box-sizing: border-box;
+			}
+			button{
+				background-color: antiquewhite;
+				border: none;
+				font-size: 12px;
+				height: 30px;
+				outline: none;
+				color: grey;
+				width: 60px;
+			}
+			p{
+				color:white;
+				background-color: skyblue;
+				height: 30px;
+				text-align: center;
+				line-height: 30px;
+				margin-top: 1px;
+				margin-bottom: 2px;
+				width: 80px;
+				
+			}
+			select{
+				height: 30px;
+				margin-bottom: 5px;
+				outline: none;
+				border: 1px solid darkgrey;
+			}
+		</style>
+	</head>
+	<body>
+		<nav> 智慧画板</nav>
+		<div id="div">
+			<p>画笔颜色</p>
+			<select id="colorsel">
+				<option style="background-color: red;">red</option>
+				<option style="background-color: blue;">blue</option>
+				<option style="background-color: black;">black</option>
+				<option style="background-color: yellow;">yellow</option>
+			</select>
+			
+			
+			<p>画笔粗细</p>
+			<select id="linesizesel">
+				<option>2</option>
+				<option>4</option>
+				<option>6</option>
+				<option>8</option>
+				<option>10</option>
+				<option>12</option>
+			</select>
+			
+			<p>橡皮擦粗细</p>
+			<select id="subsizesel">
+
+				<option>6</option>
+				<option>8</option>
+				<option>10</option>
+				<option>12</option>
+				<option>14</option>
+			</select>
+			<div style="display: flex;flex-direction: row;justify-content: space-around;">
+				<button id="clearbtn">清除画布</button>
+				<button id="subbtn">橡皮擦</button>
+			</div>
+			
+		</div>
+
+		<canvas id="canvas" ></canvas>
+
+		
+		<script>
+			
+			var div = document.getElementById("div")
+			// 获得去掉滚动条后用户在浏览器正文可视区的宽度
+			var width =document.body.clientWidth
+			// 获得用户在浏览器正文可视区的高度
+			var height =window.innerHeight
+			// 设置div的高度与正文内容可视区一样,也就是不出现滚动条
+			// 注意加"px",不然高度无效
+			div.style.height=height+"px"
+			// console.log(width+" "+height)
+			var canvas = document.getElementById("canvas")
+			var ctx = canvas.getContext("2d")
+			// 设置浏览器可视区域剩余面积为canvas的,对canvas用百分比设置宽和高无效
+			// 注意是canvas.height和canvas.width,不是canvas.style.....
+			canvas.height=height-50
+			canvas.width=width-130
+			// 设置绘制线条的起始点
+			var start_x = 0
+			var start_y = 0
+			// 设置绘制线条过程中绘制点的位置
+			var x = 0
+			var y = 0
+			// 判断橡皮擦是否生效，若生效，则擦除线条，若不生效，则绘制线条
+			var subjug = false
+			// 判断鼠标是否处于onmousedown状态
+			var yes = false
+			// 获得canvas的宽和高，用以判断鼠标是否在canva之外
+			// 这里就可以用canvas.style...获得宽和高了
+			var x_len = canvas.style.width
+			var y_len = canvas.style.height
+			var div = document.getElementById("div")
+			// 获取canvas相对于浏览窗口的位置
+			var rect = canvas.getBoundingClientRect()
+			// 以下部分不懂可以私聊我
+			window.onmousedown = function(e) {
+				yes = true
+
+				start_x = e.pageX - rect.left
+				start_y = e.pageY - rect.top
+				ctx.beginPath()
+				ctx.moveTo(start_x, start_y)
+				
+			}
+
+			canvas.onmousemove = function(e) {
+
+				x = e.pageX - rect.left
+				y = e.pageY - rect.top
+				// console.log(x, y)
+				if (subjug == false) {
+					if (yes == true || x < x_len || y < y_len) {
+						draw(x, y)
+					}
+				} else {
+					if (yes == true || x < x_len || y < y_len) {
+						sub(x, y)
+					}
+				}
+
+			}
+			window.onmouseup = function(e) {
+				yes = false
+
+			}
+
+
+			function draw(x, y) {
+				var color = document.getElementById("colorsel")
+				var index1 = color.selectedIndex
+				var value1 = color.options[index1].value
+				// 这里注意转型
+				ctx.strokeStyle = value1.toString()
+				var line = document.getElementById("linesizesel")
+				var index2 = line.selectedIndex
+				var value2 = line.options[index2].value
+				// 这里注意转型
+				ctx.lineWidth = Number(value2)
+				console.log(value2)
+				ctx.lineTo(x, y)
+				ctx.stroke()
+
+			}
+			// 清除画布
+			var clearbtn = document.getElementById("clearbtn")
+			clearbtn.addEventListener("click", function() {
+				ctx.fillStyle = "white"
+				ctx.beginPath()
+				ctx.fillRect(0, 0, width-130, height-50)
+				ctx.closePath()
+			})
+			// 设置橡皮擦按钮点击事件
+			var subbtn = document.getElementById("subbtn")
+			subbtn.addEventListener("click", function() {
+				subjug = !subjug
+				if (subjug == true) {
+					subbtn.innerHTML = "停止擦除"
+
+				} else {
+					subbtn.innerHTML = "橡皮擦"
+				}
+
+			})
+			// 擦除线条
+			function sub(x, y) {
+				var subline = document.getElementById("subsizesel")
+				var index3 = subline.selectedIndex
+				var value3 = subline.options[index3].value
+				// 注意转型
+				ctx.lineWidth = Number(value3)
+				ctx.strokeStyle = "white"
+				ctx.lineTo(x, y)
+				ctx.stroke()
+			}
+		</script>
+	</body>
+</html>
+
